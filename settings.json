@@ -1,0 +1,32 @@
+{
+  "port": 3000,
+  "httpsPort": 8443,
+  "localIp": null,
+  "publicAccess": {
+    "enabled": true,
+    "mode": "quick",
+    "note": "Set enabled to true to expose the mobile QR code over the public internet instead of requiring the phone to be on the same WiFi as this desktop. Requires internet access on this machine. All API routes require login either way.",
+    "modeNote": "mode: 'quick' (default) gets you a random https://*.trycloudflare.com URL with zero setup, but it changes every time the app restarts, which breaks phones that already logged in until someone re-enters the new URL on the mobile app's SYNC screen. mode: 'named' uses a Cloudflare Tunnel with a fixed hostname on your own domain that never changes — see namedTunnel below.",
+    "namedTunnel": {
+      "token": "",
+      "hostname": "",
+      "note": "Only used when mode is 'named'. Requires a free Cloudflare account with a domain added to it. Setup: 1) Cloudflare dashboard -> Zero Trust -> Networks -> Tunnels -> Create a tunnel -> choose 'Cloudflared' -> name it (e.g. 'assettrack'). 2) On the 'Install connector' step, copy just the token value from the install command shown (the long string after --token) into the token field above. 3) On the 'Public Hostnames' step, add a hostname (e.g. assettrack.yourdomain.com) with Service type HTTP and URL localhost:3000 (match the port setting above) — paste that same hostname into the hostname field above (without https://). 4) Set mode to 'named' above and restart AssetTrack."
+    }
+  },
+  "dbFile": "inventory.db",
+  "backupIntervalHours": 24,
+  "mapBoundingBox": {
+    "note": "Centered on NBSC's actual campus coordinates (8.359999, 124.868103), Manolo Fortich, Bukidnon — good enough to center the Cluster Map's tile download and initial view, but not a precise per-building survey. Run 'npm run tiles:fetch' after adjusting this so the map works offline; use the Cluster Map screen's PLACE ON MAP button per room to pin each room's exact spot once you can see real buildings on the map.",
+    "minLat": 8.354999,
+    "minLng": 124.860603,
+    "maxLat": 8.364999,
+    "maxLng": 124.875603,
+    "zoomLevels": [15, 16, 17, 18, 19]
+  },
+  "tileProvider": {
+    "note": "tiles:fetch needs a real tile provider here — it will refuse to run without one. Bulk-downloading straight from tile.openstreetmap.org (the public tile.openstreetmap.org server) is explicitly against OpenStreetMap's tile usage policy (osmfoundation.org/wiki/Policies/Tile_usage): that server auto-detects bulk/scripted downloads and blocks them, returning a black-and-yellow 'Access blocked' image INSTEAD of the real tile — which is exactly what got saved into src/static/map_tiles/ and is now showing up on the Cluster Map. Sign up for a free API key from a provider meant for this (e.g. MapTiler: https://cloud.maptiler.com — free tier covers a small single-campus map easily) and paste its raw tile URL template below with {key} where the key goes, e.g. 'https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key={key}'.",
+    "urlTemplate": "https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key={key}",
+    "apiKey": "vux7lhW4KeOhltaVgf2G",
+    "attribution": "&copy; MapTiler &copy; OpenStreetMap contributors"
+  }
+}
